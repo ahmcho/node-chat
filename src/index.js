@@ -48,9 +48,8 @@ io.on('connection',(socket) => {
     })
     
     socket.on('radio', blob =>  {
-        console.log(blob);
         const user = getUser(socket.id);
-        console.log(user);
+        console.log('User: ',user);
         // can choose to broadcast it to whoever you want
         //io.to(user.room).emit('radio',generateAudioMessage(user.username, blob));
         io.to(user.room).emit('voice', generateAudioMessage(user.username, blob));

@@ -1,4 +1,4 @@
-const generateMessage = (username, text) => {
+const generateMessage = (username,text) => {
     return {
         username,
         text,
@@ -6,7 +6,7 @@ const generateMessage = (username, text) => {
     }
 }
 
-const generateLocationMessage = (username, url) => {
+const generateLocationMessage = (username,url) => {
     return {
         username,
         url,
@@ -14,7 +14,16 @@ const generateLocationMessage = (username, url) => {
     }
 }
 
+const generateAudioMessage = (username, blob) => {
+    return {
+        username,
+        blob,
+        createdAt: new Date().getTime()
+    }
+}
+
 module.exports = {
     generateMessage,
-    generateLocationMessage
+    generateLocationMessage,
+    generateAudioMessage
 }

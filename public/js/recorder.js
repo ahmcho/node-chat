@@ -1,55 +1,58 @@
-const recorderBtn = document.getElementById("recorder");
-
 const audioTemplate = document.getElementById("audio-template").innerHTML;
-let stream, recorder, counter=1, chunks, media;
-let log = console.log.bind(console);
-const ul = document.querySelector("#files");
-const mediaOptions = {
-    audio: {
-      tag: 'audio',
-      type: 'audio/ogg',
-      ext: '.ogg',
-      gUM: {audio: true}
-    }
-};
-recorderBtn.addEventListener("click", function() {
-    if(recorder.state === 'inactive'){
-        chunks = [];
-        recorder.start();
-        console.log(recorder.state);
-        this.innerHTML = '<i class="fas fa-microphone"></i> Stop'
-    } else if(recorder.state === 'recording'){
-        recorder.stop();
-        this.innerHTML = '<i class="fas fa-microphone"></i> Start'
-    }
-
-})
-
-
-media = mediaOptions.audio;
-navigator.mediaDevices.getUserMedia(media.gUM)
-.then(_stream => {
-    stream = _stream;
-    recorder = new MediaRecorder(stream);
-    recorder.ondataavailable = e => {
-        chunks.push(e.data);
-        if(recorder.state == 'inactive')  {
-            var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-            socket.emit('radio', blob);
-        }
-    };
-})
-.catch(log);
-
-const recorderBtnDown = () => {
-   
-}
-const recorderBtnUp = () => {
+( () => {
+    let chunks = [];
+    let recorder;
+    const buttonRecord = document.querySelector('#recorderStart');
+    const buttonStop = document.querySelector('#recorderStop');
     
-}
+    const saveRecordingChunk = event => {
+        chunks.push(event.data);
+    };
+
+    const saveRecording = event => {
+        const blob = new Blob(chunks, {  type: 'audio/ogg' });
+        socket.emit('radio', blob);
+    };
+
+    if (('MediaRecorder' in window)) {    
+        const record = event => {
+          navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+            recorder = new MediaRecorder(stream);
+            recorder.start();
+            recorder.ondataavailable = saveRecordingChunk;
+            recorder.onstop = saveRecording;
+            
+            buttonRecord.classList.add('hidden');
+            buttonStop.classList.remove('hidden');
+          })
+          .catch(error => {
+            console.log(error)
+          });
+        };
+        
+        const stop = () => {
+          recorder.stop();
+          chunks = [];
+          const tracks = recorder.stream.getTracks();
+          tracks.forEach(function(track) {
+              track.stop();
+          });
+          buttonRecord.classList.remove('hidden');
+          buttonStop.classList.add('hidden');
+        };
+
+        buttonRecord.addEventListener('mouseup', record);
+        buttonStop.addEventListener('mouseup', stop);
+      } else {
+        // Our browser does not support the MediaRecorder API, we'll show an error message
+        customAlert();
+      }
+})();
+
+
 
 socket.on('voice', (data) => {
-    console.log(data)
     const blob = new Blob([data.blob], { 'type' : 'audio/ogg; codecs=opus' });
     audio = window.URL.createObjectURL(blob);
     const html = Mustache.render(audioTemplate, {
@@ -60,4 +63,34 @@ socket.on('voice', (data) => {
     $messages.insertAdjacentHTML('beforeend',html)
     autscroll();
  })
- 
+
+ const customAlert = () => {
+    let timerInterval;
+    Swal.fire({
+        title: 'Error!',
+        html: 'Your browser does not support MediaRecorder API. Closing modal in <b></b> milliseconds.',
+        timer: 1000,
+        timerProgressBar: true,
+        onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+                const content = Swal.getContent()
+                if (content) {
+                    const b = content.querySelector('b')
+                    if (b) {
+                        b.textContent = Swal.getTimerLeft()
+                    }
+                }
+            }, 100)
+        },
+        onClose: () => {
+            clearInterval(timerInterval)
+        }
+    })
+    .then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('I was closed by the timer')
+        }
+    })
+}

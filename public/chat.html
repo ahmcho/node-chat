@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="/img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/styles.min.css">
     <script src="https://kit.fontawesome.com/ec4e3e40d9.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
@@ -25,7 +26,8 @@
                     <button title="Send message"><i class="fas fa-paper-plane"></i></button>
                 </form>
                 <button title="Send location" id="sendLocation"><i class="fas fa-map-marker-alt"></i> </button>
-                <button title="Send audio" id="recorder" style="margin-left:10px"><i class="fas fa-microphone"></i> Start</button>
+                <button title="Start audio" id="recorderStart" style="margin-left:10px"><i class="fas fa-microphone"></i> Start</button>
+                <button title="Stop audio" id="recorderStop" class="hidden" style="margin-left:10px"><i class="fas fa-microphone" style="color:red;"></i> Stop</button>
             </div>
         </div>
     </div>

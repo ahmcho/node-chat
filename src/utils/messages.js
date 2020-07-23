@@ -22,10 +22,10 @@ const generateAudioMessage = (username, blob) => {
     }
 }
 
-const generatePictureMessage = (username, blob) => {
+const generatePictureMessage = (username, url) => {
     return {
         username,
-        blob,
+        url,
         createdAt: new Date().getTime()
     }
 }

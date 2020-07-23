@@ -62,10 +62,9 @@ socket.on('locationMessage', (message) => {
     autscroll();
 })
 
-socket.on('image', ({blob,username,createdAt}) => {
-    const src = blob
+socket.on('image', ({url,username,createdAt}) => {
     const html = Mustache.render(imageTemplate, {
-        src,
+        url,
         username,
         createdAt: moment(createdAt).format('HH:mm:ss')
     })
@@ -81,12 +80,27 @@ socket.on('roomData',({room, users}) => {
    document.querySelector("#sidebar").innerHTML = html
 })
 
-imageUpload.addEventListener("change", (e) => {
-    const blob = URL.createObjectURL(e.target.files[0]);
-    console.log(blob);
-    socket.emit('picture', blob, () => {
+imageUpload.addEventListener("change", async (e) => {
+    const data = new FormData();
+    data.append('files',e.target.files[0]);
+    const options = {
+        method: 'POST',
+        body: data
+    }
+    const response = await fetch('https://cors-anywhere.herokuapp.com/https://telegra.ph/upload', options);
+    const result = await response.json();
+    const url = `https://telegra.ph/${result[0].src}`;
+    socket.emit('picture', url, () => {
         console.log('Picture shared');
     });
+    console.log(url);
+    /*
+    const blob = URL.createObjectURL(e.target.files[0]);
+    console.log(blob);
+    socket.emit('picture', url, () => {
+        console.log('Picture shared');
+    });
+    */
 })
 
 $imageForm.addEventListener("submit", (e) => {

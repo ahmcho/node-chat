@@ -22,8 +22,17 @@ const generateAudioMessage = (username, blob) => {
     }
 }
 
+const generatePictureMessage = (username, blob) => {
+    return {
+        username,
+        blob,
+        createdAt: new Date().getTime()
+    }
+}
+
 module.exports = {
     generateMessage,
     generateLocationMessage,
-    generateAudioMessage
+    generateAudioMessage,
+    generatePictureMessage
 }

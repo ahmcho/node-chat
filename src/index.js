@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const socketio = require('socket.io');
 const Filter = require('bad-words');
-const {generateMessage, generateLocationMessage, generateAudioMessage} = require('./utils/messages');
+const {generateMessage, generateLocationMessage, generateAudioMessage,generatePictureMessage} = require('./utils/messages');
 const {addUser,removeUser,getUser,getUsersInRoom} = require('./utils/users')
 const app = express();
 const server = http.createServer(app);
@@ -49,11 +49,18 @@ io.on('connection',(socket) => {
     
     socket.on('radio', blob =>  {
         const user = getUser(socket.id);
-        console.log('User: ',user);
+        console.log(`1 User: ${user}`);
         // can choose to broadcast it to whoever you want
         //io.to(user.room).emit('radio',generateAudioMessage(user.username, blob));
         io.to(user.room).emit('voice', generateAudioMessage(user.username, blob));
     });
+
+    socket.on('picture', (blob,callback) => {
+        const user = getUser(socket.id);
+        console.log(`2 User: ${user}`);
+        io.to(user.room).emit('image', generatePictureMessage(user.username, blob));
+        callback();
+    })
     
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);

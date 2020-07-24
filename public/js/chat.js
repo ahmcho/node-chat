@@ -77,7 +77,7 @@ socket.on('roomData',({room, users}) => {
        room,
        users
    })
-   document.querySelector("#sidebar").innerHTML = html
+   document.querySelector("#sidebar").innerHTML = html;
 })
 
 imageUpload.addEventListener("change", async (e) => {
@@ -102,6 +102,8 @@ imageUpload.addEventListener("change", async (e) => {
     });
     */
 })
+
+
 
 $imageForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -145,36 +147,3 @@ socket.emit('join',{ username, room }, (error) => {
     }
 })
 
-// let stream, recorder, counter=1, chunks, media;
-// let log = console.log.bind(console);
-// const ul = document.querySelector("#files");
-// const mediaOptions = {
-//     audio: {
-//       tag: 'audio',
-//       type: 'audio/ogg',
-//       ext: '.ogg',
-//       gUM: {audio: true}
-//     }
-// };
-// media = mediaOptions.audio;
-// navigator.mediaDevices.getUserMedia(media.gUM)
-// .then(_stream => {
-//     stream = _stream;
-//     recorder = new MediaRecorder(stream);
-//     recorder.ondataavailable = e => {
-//         chunks.push(e.data);
-//         if(recorder.state == 'inactive')  makeLink();
-//     };
-// })
-// .catch(log);
-
-// function makeLink(){
-//     let blob = new Blob(chunks, {type: media.type });
-//     let url = URL.createObjectURL(blob);
-//     let li = document.createElement('li')
-//     let mediTag = document.createElement(media.tag);
-//     mediTag.controls = true;
-//     mediTag.src = url;
-//     li.appendChild(mediTag);
-//     ul.appendChild(li);
-// }

@@ -49,7 +49,6 @@ io.on('connection',(socket) => {
     
     socket.on('radio', blob =>  {
         const user = getUser(socket.id);
-        //io.to(user.room).emit('radio',generateAudioMessage(user.username, blob));
         io.to(user.room).emit('voice', generateAudioMessage(user.username, blob));
     });
 

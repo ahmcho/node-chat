@@ -94,13 +94,6 @@ imageUpload.addEventListener("change", async (e) => {
         console.log('Picture shared');
     });
     console.log(url);
-    /*
-    const blob = URL.createObjectURL(e.target.files[0]);
-    console.log(blob);
-    socket.emit('picture', url, () => {
-        console.log('Picture shared');
-    });
-    */
 })
 
 
@@ -121,8 +114,7 @@ $messageForm.addEventListener('submit', (e) => {
         if(error){
             return console.log(error);
         }
-
-        console.log('the message was delivered.')
+        console.log('The message was delivered.')
     });
 })
 
@@ -135,7 +127,7 @@ document.querySelector("#sendLocation").addEventListener("click", () => {
     navigator.geolocation.getCurrentPosition((position) => {
         $sendLocation.removeAttribute('disabled');
        socket.emit('sendLocation', { latitude: position.coords.latitude, longitude: position.coords.longitude }, () => {
-           console.log('Location shared');
+           console.log('The location was shared');
        })
     })
 })

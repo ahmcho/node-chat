@@ -89,7 +89,7 @@ imageUpload.addEventListener("change", async (e) => {
     }
     const response = await fetch('https://cors-anywhere.herokuapp.com/https://telegra.ph/upload', options);
     const result = await response.json();
-    const url = `https://telegra.ph/${result[0].src}`;
+    const url = `https://telegra.ph${result[0].src}`;
     socket.emit('picture', url, () => {
         console.log('Picture shared');
     });
